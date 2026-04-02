@@ -275,24 +275,34 @@
     }
 
     function drawMoon(phase){
-      const shadow = document.getElementById('shadowEllipse');
-      const waxing = phase <= 0.5;
-      const cosv = Math.cos(2 * Math.PI * phase);
-      let rx = Math.abs(cosv) * 36;
+  const shadow = document.getElementById('shadowEllipse');
+  const waxing = phase <= 0.5;
+  const cosv = Math.cos(2 * Math.PI * phase);
+  let rx = Math.abs(cosv) * 36;
 
-      if (rx < 0.5) rx = 0.5;
+  // 🌕 CAS ESPECIAL: lluna plena
+  if (Math.abs(phase - 0.5) < 0.02){
+    shadow.setAttribute('rx', 0);
+    return;
+  }
 
-      if (waxing){
-        shadow.setAttribute('cx', 56 - (36 - rx));
-      } else {
-        shadow.setAttribute('cx', 56 + (36 - rx));
-      }
-      shadow.setAttribute('rx', rx);
+  // 🌑 CAS ESPECIAL: lluna nova
+  if (phase < 0.02 || phase > 0.98){
+    shadow.setAttribute('rx', 36);
+    shadow.setAttribute('cx', 56);
+    return;
+  }
 
-      if (Math.abs(cosv) > 0.999){
-        shadow.setAttribute('rx', 36);
-        shadow.setAttribute('cx', waxing ? 20 : 92);
-      }
+  if (rx < 0.5) rx = 0.5;
+
+  if (waxing){
+    shadow.setAttribute('cx', 56 - (36 - rx));
+  } else {
+    shadow.setAttribute('cx', 56 + (36 - rx));
+  }
+
+  shadow.setAttribute('rx', rx);
+}
     }
 
     function updateWidget(){
