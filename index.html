@@ -201,7 +201,7 @@
     </div>
 
     <div class="right">
-      <div class="eyebrow">El Masnou NE</div>
+      <div class="eyebrow">Widget lunar modern</div>
       <div class="phase" id="phaseName">Calculant...</div>
       <div class="desc" id="phaseText">Actualitzant dades lunars</div>
 
@@ -275,34 +275,29 @@
     }
 
     function drawMoon(phase){
-  const shadow = document.getElementById('shadowEllipse');
-  const waxing = phase <= 0.5;
-  const cosv = Math.cos(2 * Math.PI * phase);
-  let rx = Math.abs(cosv) * 36;
+      const shadow = document.getElementById('shadowEllipse');
+      const r = 36;
 
-  // 🌕 CAS ESPECIAL: lluna plena
-  if (Math.abs(phase - 0.5) < 0.02){
-    shadow.setAttribute('rx', 0);
-    return;
-  }
+      if (phase < 0.02 || phase > 0.98){
+        shadow.setAttribute('cx', 56);
+        shadow.setAttribute('rx', r);
+        return;
+      }
 
-  // 🌑 CAS ESPECIAL: lluna nova
-  if (phase < 0.02 || phase > 0.98){
-    shadow.setAttribute('rx', 36);
-    shadow.setAttribute('cx', 56);
-    return;
-  }
+      if (Math.abs(phase - 0.5) < 0.02){
+        shadow.setAttribute('cx', 56);
+        shadow.setAttribute('rx', 0);
+        return;
+      }
 
-  if (rx < 0.5) rx = 0.5;
+      const waxing = phase < 0.5;
+      const cosv = Math.cos(2 * Math.PI * phase);
+      let rx = Math.abs(cosv) * r;
 
-  if (waxing){
-    shadow.setAttribute('cx', 56 - (36 - rx));
-  } else {
-    shadow.setAttribute('cx', 56 + (36 - rx));
-  }
+      if (rx < 0.5) rx = 0.5;
 
-  shadow.setAttribute('rx', rx);
-}
+      shadow.setAttribute('rx', rx);
+      shadow.setAttribute('cx', waxing ? 56 - (r - rx) : 56 + (r - rx));
     }
 
     function updateWidget(){
